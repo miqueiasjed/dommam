@@ -13,7 +13,7 @@
 | # | Nome | Status | Depende de | Tasks est. | Skills |
 |---|------|--------|------------|------------|--------|
 | 1 | Setup Monorepo + Infraestrutura Laravel | ✅ | — | 6 | laravel-arquitetura |
-| 2 | Autenticação por Magic Link (Backend) | ⏳ | 1 | ~7 | laravel-arquitetura |
+| 2 | Autenticação por Magic Link (Backend) | ✅ | 1 | 6 | laravel-arquitetura |
 | 3 | Admin Backend: Auth + CRUD de Roteiros | ⏳ | 1 | ~8 | laravel-arquitetura |
 | 4 | Webhooks Lastlink + Serviço de E-mail | ⏳ | 1, 2 | ~7 | laravel-arquitetura |
 | 5 | Download com Marca D'água Dinâmica | ⏳ | 1, 2, 3 | ~5 | laravel-arquitetura |

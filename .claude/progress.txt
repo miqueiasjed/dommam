@@ -18,3 +18,23 @@
 - A session padrão do Laravel 12 já usa database driver; o arquivo de sessions padrão precisou ser removido pois a migration custom de magic link usa a mesma tabela `sessions`.
 - O `npm run build` do frontend passou sem erros após mover para `frontend/` (154 pacotes, build em 259ms).
 - `php artisan migrate --pretend` valida a syntax sem precisar de banco conectado — útil para CI.
+
+## Plano 2 – Autenticação por Magic Link (concluído em 2026-05-13)
+
+### O que foi feito
+- Model `Sessao` com scopes `ativa()` e `expirada()` (tabela `sessions`)
+- `LastlinkService`: wrapper da API Lastlink com `Cache::remember()`, fail-closed (retorna false em erros), `invalidarCache()` para webhooks
+- `EmailService`: envio de magic link via `Mail::send()` com template HTML inline em português
+- `MagicLinkService`: gera token raw (64 hex chars), armazena apenas SHA-256 no banco, invalida tokens anteriores não usados
+- `SessaoService`: verificação de token, criação de cookie httpOnly (30 dias), leitura de sessão ativa, revogação
+- Middleware `VerificarAssinaturaAtiva`: 401 sem cookie, 403 sem assinatura ativa, injeta `email_membro` no request
+- Controllers `AuthController` e `LogoutController` (finos, apenas delegam para Services)
+- `routes/api.php` criado e registrado no `bootstrap/app.php` com alias `auth.membro`
+- 10 testes de feature passando (fluxo completo + casos de erro)
+
+### Aprendizados e observações
+- Laravel `postJson()` / `getJson()` nos testes não enviam cookies automaticamente — é necessário `->withCredentials()->withUnencryptedCookie('nome', $valor)` para simular sessão autenticada nos testes feature.
+- Cookies criptografados pelo Laravel não são descriptografados nos testes a menos que o middleware `EncryptCookies` esteja presente no grupo de rotas — a rota API não o tem por padrão.
+- `bootstrap/app.php` no Laravel 12 substitui `app/Http/Kernel.php` — middleware aliases são registrados via `$middleware->alias([])` no `withMiddleware()`.
+- Token raw nunca deve ser armazenado — apenas o hash SHA-256. O token raw vai por e-mail, o hash fica no banco.
+- Fail-closed no `LastlinkService` é crítico: qualquer falha na API externa deve negar o acesso (retorna `false`), não conceder.
