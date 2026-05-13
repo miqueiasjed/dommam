@@ -1,0 +1,20 @@
+# Log de Aprendizados por Plano
+
+## Plano 1 – Setup Monorepo + Infraestrutura Laravel (concluído em 2026-05-13)
+
+### O que foi feito
+- Laravel 12.x instalado em `backend/` via composer create-project
+- CORS configurado com `supports_credentials: true` (obrigatório para Sanctum com cookies)
+- Sanctum com domínios stateful via env `SANCTUM_STATEFUL_DOMAINS`
+- Session: driver database, http_only, same_site lax
+- Cache e Queue usando Redis como driver padrão
+- BaseApiController abstrato com helpers `success()`, `created()`, `error()` em português
+- 8 migrations criadas (roteiros, sessions, downloads, webhooks_log, admin_users, admin_audit_log + padrão Laravel)
+- Frontend React movido de `src/` na raiz para `frontend/src/` com proxy `/api` → porta 8000
+
+### Aprendizados e observações
+- Migrations com mesmo timestamp são ordenadas alfabeticamente → `admin_audit_log` viria antes de `admin_users` (FK failure). Solução: ajustar timestamps manualmente para garantir admin_users antes de admin_audit_log.
+- O Laravel 12 não cria `config/cors.php` por padrão — é criado diretamente no arquivo.
+- A session padrão do Laravel 12 já usa database driver; o arquivo de sessions padrão precisou ser removido pois a migration custom de magic link usa a mesma tabela `sessions`.
+- O `npm run build` do frontend passou sem erros após mover para `frontend/` (154 pacotes, build em 259ms).
+- `php artisan migrate --pretend` valida a syntax sem precisar de banco conectado — útil para CI.

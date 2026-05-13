@@ -1,0 +1,17 @@
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Backend
+backend/.env
+backend/vendor/
+backend/storage/logs/
+backend/storage/app/public/
+backend/public/storage
+backend/bootstrap/cache/*.php
+
+# Raiz
+dist/
+node_modules/
+.DS_Store
+*.local
