@@ -61,3 +61,24 @@
 - Pending token para 2FA armazenado no Cache com TTL de 5 min — ao validar, invalidar imediatamente (single-use) para evitar replay attack.
 - SoftDeletes no model Roteiro: `delete()` faz soft delete; para hard delete usar `forceDelete()`. O comando de publicação só busca registros não deletados.
 - `class_basename($entidade)` retorna nome curto da classe (ex: 'Roteiro') — ideal para coluna `entidade_tipo` no audit log sem namespace completo.
+
+## Plano 4 – Webhooks Lastlink + Serviço de E-mail (concluído em 2026-05-13)
+
+### O que foi feito
+- Migration adicional para coluna `event_id` string nullable unique em `webhooks_log`
+- Model `WebhookLog` com constantes de status, `jaProcessado()` estático e scope `pendentes`
+- `WebhookController` com validação HMAC-SHA256, idempotência por `event_id`, registro rápido em `webhooks_log` e dispatch de job
+- `ProcessaWebhookJob` (ShouldQueue, 3 tries, 60s backoff) — atualiza status para `processado` ou `erro`
+- `ProcessaEventoService` com `match()` para 5 eventos: Purchase_Order_Confirmed, Subscription_Renewed, Subscription_Canceled, Payment_Refund, Payment_Chargeback
+- `EmailService` estendido com `enviarBoasVindas()` e `enviarCancelamento()` usando Blade views
+- 3 templates Blade em `resources/views/emails/` (magic-link, boas-vindas, cancelamento) com estilo cinematográfico
+- Rota pública `POST /api/webhooks/lastlink` registrada sem middleware de autenticação
+- `config/services.php` atualizado com chave `webhook_secret`
+- 3 testes de feature passando (HMAC válido, HMAC inválido, idempotência)
+
+### Aprendizados e observações
+- "Invalidar sessão" com autenticação cookie-based sem server-side storage = invalida o cache Lastlink via `LastlinkService::invalidarCache()`. O middleware `VerificarAssinaturaAtiva` faz a verificação a cada request — ao invalidar o cache, a próxima requisição do usuário consulta a Lastlink e vê assinatura inativa.
+- HMAC deve usar `hash_equals()` (comparação em tempo constante) para evitar timing attacks — nunca usar `===` direto.
+- Job re-lança a exception após registrar o erro no banco — isso ativa o mecanismo de retry do Laravel Queue sem perder o estado.
+- Em ambiente local/testing sem `LASTLINK_WEBHOOK_SECRET` configurado, o HMAC é bypassado para facilitar desenvolvimento — falha-aberta só em envs seguros, fail-closed em produção.
+- `Queue::fake()` nos testes impede que jobs sejam de fato processados — usar `Queue::assertPushed()` para verificar dispatch sem efeitos colaterais.

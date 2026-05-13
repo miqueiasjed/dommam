@@ -36,9 +36,10 @@ return [
     ],
 
     'lastlink' => [
-        'url'       => env('LASTLINK_API_URL', 'https://lastlink.com/api/v1'),
-        'api_key'   => env('LASTLINK_API_KEY', ''),
-        'cache_ttl' => (int) env('LASTLINK_CACHE_TTL', 600),
+        'url'            => env('LASTLINK_API_URL', 'https://lastlink.com/api/v1'),
+        'api_key'        => env('LASTLINK_API_KEY', ''),
+        'cache_ttl'      => (int) env('LASTLINK_CACHE_TTL', 600),
+        'webhook_secret' => env('LASTLINK_WEBHOOK_SECRET', ''),
     ],
 
 ];

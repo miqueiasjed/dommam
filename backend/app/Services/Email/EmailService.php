@@ -22,6 +22,28 @@ class EmailService
         Log::info('Magic link enviado', ['email' => $email]);
     }
 
+    public function enviarBoasVindas(string $email, string $linkPrimeiroAcesso): void
+    {
+        Mail::send('emails.boas-vindas', ['link' => $linkPrimeiroAcesso], function ($message) use ($email) {
+            $message
+                ->to($email)
+                ->subject('Bem-vindo ao Danuzio History Backstage! 🎬');
+        });
+
+        Log::info('E-mail de boas-vindas enviado', ['email' => $email]);
+    }
+
+    public function enviarCancelamento(string $email): void
+    {
+        Mail::send('emails.cancelamento', [], function ($message) use ($email) {
+            $message
+                ->to($email)
+                ->subject('Sentiremos sua falta — Danuzio History Backstage');
+        });
+
+        Log::info('E-mail de cancelamento enviado', ['email' => $email]);
+    }
+
     private function templateMagicLink(string $link): string
     {
         return <<<HTML

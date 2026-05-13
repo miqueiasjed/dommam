@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminRoteiroController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Webhook\WebhookController;
 use Illuminate\Support\Facades\Route;
 
 // Rotas públicas de autenticação de membros
@@ -17,6 +18,9 @@ Route::prefix('auth')->group(function () {
 Route::middleware('auth.membro')->group(function () {
     // Planos futuros adicionarão rotas aqui
 });
+
+// Webhook Lastlink (rota pública — HMAC valida autenticidade)
+Route::post('webhooks/lastlink', [WebhookController::class, 'receber']);
 
 // Rotas de autenticação admin (públicas)
 Route::prefix('admin')->group(function () {
