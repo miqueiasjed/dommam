@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'auth.membro' => \App\Http\Middleware\VerificarAssinaturaAtiva::class,
+            'auth.admin'  => \App\Http\Middleware\AutenticadoComoAdmin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

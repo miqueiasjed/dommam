@@ -38,3 +38,26 @@
 - `bootstrap/app.php` no Laravel 12 substitui `app/Http/Kernel.php` — middleware aliases são registrados via `$middleware->alias([])` no `withMiddleware()`.
 - Token raw nunca deve ser armazenado — apenas o hash SHA-256. O token raw vai por e-mail, o hash fica no banco.
 - Fail-closed no `LastlinkService` é crítico: qualquer falha na API externa deve negar o acesso (retorna `false`), não conceder.
+
+## Plano 3 – Admin Backend: Auth + CRUD de Roteiros (concluído em 2026-05-13)
+
+### O que foi feito
+- Migration adicional para coluna `role` enum('admin','operator') na tabela `admin_users`
+- Models `AdminUser`, `Roteiro` (com SoftDeletes e scopes) e `AdminAuditLog` criados
+- `AdminAuthService` com login (email+senha), verificação 2FA TOTP e geração de secret (lib `spomky-labs/otphp` v11.4)
+- Middleware `AutenticadoComoAdmin` com alias `auth.admin` em bootstrap/app.php
+- `FileUploadService` para upload de capa (disco público) e PDF (disco privado)
+- `AuditLogService` com constantes de ação e registro de ip_address em todo CRUD
+- `RoteiroService` com CRUD completo: slug único com sufixo incremental, cálculo de status por data, filtros paginados
+- FormRequests `LoginAdminRequest`, `CriarRoteiroRequest`, `AtualizarRoteiroRequest` com mensagens em português
+- `AdminAuthController` (login, 2fa, logout) e `AdminRoteiroController` (index, store, show, update, destroy, despublicar)
+- Command `roteiros:publicar-agendados` agendado a cada minuto via `routes/console.php`
+- `AdminUserSeeder` idempotente (firstOrCreate) com admin padrão para setup inicial
+
+### Aprendizados e observações
+- `spomky-labs/otphp` v11.4 usa `TOTP::createFromSecret($secret)` (não `TOTP::create($secret)`) — API mudou entre versões.
+- O cast `'password' => 'hashed'` no model AdminUser faz o hash automaticamente — passar a senha raw no seeder sem Hash::make() evita double-hashing.
+- Laravel 12 registra o scheduler em `routes/console.php` via `Schedule::command()` (não em `app/Console/Kernel.php` que não existe mais).
+- Pending token para 2FA armazenado no Cache com TTL de 5 min — ao validar, invalidar imediatamente (single-use) para evitar replay attack.
+- SoftDeletes no model Roteiro: `delete()` faz soft delete; para hard delete usar `forceDelete()`. O comando de publicação só busca registros não deletados.
+- `class_basename($entidade)` retorna nome curto da classe (ex: 'Roteiro') — ideal para coluna `entidade_tipo` no audit log sem namespace completo.
