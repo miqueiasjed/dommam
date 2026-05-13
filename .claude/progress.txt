@@ -1,5 +1,25 @@
 # Log de Aprendizados por Plano
 
+## Plano 7 – Frontend: Biblioteca de Roteiros / Grid Netflix (concluído em 2026-05-13)
+
+### O que foi feito
+- `useRoteiros.js`: hook com fetch autenticado (`credentials: 'include'`), debounce 300ms só na busca, suporte a filtros múltiplos (temas como array com `temas[]`), estado de carregando/erro/dados
+- `RoteiroCard.jsx`: card poster aspect-ratio 2:3 com overlay de hover (gradiente, sinopse, tag, botão "Ver roteiro"), rodapé fixo para mobile (oculto em sm+), fallback visual para sem capa
+- `RoteiroGrid.jsx`: grid responsivo 2/3/4 colunas, 8 skeletons no loading, mensagem de erro, EmptyState quando vazio
+- `SearchBar.jsx`, `SortSelector.jsx`, `FilterBar.jsx`: filtros compostos com múltipla seleção de temas (toggle visual), dropdown de mês derivado dos roteiros, dropdown de tipo fixo, botão "Limpar filtros" condicional
+- `BibliotecaPage.jsx`: integração completa com sticky bar de controles (bg-page, z-10) + área scrollável do grid
+- `CarrosselTematico.jsx`: scroll horizontal com botões prev/next visíveis no hover via `group/carrossel`, `.scrollbar-hide` adicionado ao `index.css`
+- Setup de testes: vitest + @testing-library/react + jsdom; setupTests.js; vite.config.js atualizado; script "test" no package.json
+- 11 testes passando: 4 em RoteiroCard, 4 em RoteiroGrid, 3 em BibliotecaPage
+
+### Aprendizados e observações
+- O componente `Tag` existente (do Plano 6) não tem prop `variante` — usa prop booleana `ativa` para estilo âmbar. Adaptar uso de `<Tag variante="tema">` para `<Tag ativa>`.
+- Debounce no hook: usar `setTimeout`/`clearTimeout` dentro do `useEffect` com a busca como dependência; outros filtros (mês, tipo, temas, ordenação) não precisam de debounce — disparar imediatamente com `delay: 0`.
+- No `RoteiroGrid`, temas foram derivados dos roteiros em tempo real (via `flatMap`) — evita hardcode e funciona com qualquer estrutura de dados da API.
+- `group/carrossel` é a sintaxe de named group do Tailwind CSS v4 para hover em múltiplos elementos aninhados — permite `group-hover/carrossel:opacity-100` sem conflito com outros `group`.
+- Em testes com `useNavigate`, mockar apenas `react-router-dom` com `{ useNavigate: () => vi.fn() }` é suficiente — não precisa de `MemoryRouter`.
+- `screen.getAllByText()` (plural) evita falha quando o mesmo texto aparece em múltiplos elementos do DOM (overlay desktop + rodapé mobile do RoteiroCard).
+
 ## Plano 1 – Setup Monorepo + Infraestrutura Laravel (concluído em 2026-05-13)
 
 ### O que foi feito

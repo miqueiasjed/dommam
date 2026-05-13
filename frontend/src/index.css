@@ -25,4 +25,6 @@
   .text-muted { color: rgb(161 161 170); } /* zinc-400 */
   .text-subtle { color: rgb(113 113 122); } /* zinc-500 */
   .border-default { border-color: rgba(39, 39, 42, 0.8); } /* zinc-800/80 */
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 }
