@@ -20,6 +20,24 @@
 - Em testes com `useNavigate`, mockar apenas `react-router-dom` com `{ useNavigate: () => vi.fn() }` é suficiente — não precisa de `MemoryRouter`.
 - `screen.getAllByText()` (plural) evita falha quando o mesmo texto aparece em múltiplos elementos do DOM (overlay desktop + rodapé mobile do RoteiroCard).
 
+## Plano 5 – Download com Marca D'água Dinâmica (concluído em 2026-05-13)
+
+### O que foi feito
+- Model `Download` com `$fillable`, relacionamento `roteiro()` e scope `porEmail()` — sem SoftDeletes (log imutável)
+- `setasign/fpdi` + `setasign/fpdf` instalados via composer
+- `MarcaDaguaService`: itera páginas do PDF master via FPDI, insere rodapé (`Nome · email · Data · ID: HASH8`) e cabeçalho (`Confidencial — distribuição proibida`) em cinza claro RGB(180,180,180); usa arquivos temporários com cleanup em `finally`
+- `DownloadService`: orquestra `Storage::get()` → `MarcaDaguaService::aplicar()` → `Download::create()` → `Log::warning` se > 50 downloads em 24h; sem cache — PDF único por request
+- `DownloadController`: controller fino, retorna `Response` (não `JsonResponse`) com `Content-Type: application/pdf`, `Content-Disposition: attachment`, `Cache-Control: no-store`
+- Rota `GET /api/roteiros/{slug}/download` no grupo `auth.membro` (middleware `VerificarAssinaturaAtiva`)
+- 6 testes de feature passando: 401 sem sessão, 403 com assinatura inativa, 200 com PDF válido, registro no banco, 404 para rascunho, `Log::warning` após 50+ downloads
+
+### Aprendizados e observações
+- FPDI não tem suporte nativo a transparência/alpha em texto — solução prática: usar cor cinza claro RGB(180,180,180) sem transparência para máxima compatibilidade com PDFs de qualquer tipo.
+- `MarcaDaguaService` deve salvar bytes em arquivo temporário (não stream direto) pois FPDI exige caminho de arquivo para `setSourceFile()`.
+- Bulk insert de registros de auditoria em testes via `Download::insert([...])` é muito mais rápido que factory individual para o cenário dos 51 downloads.
+- `Log::spy()` (não `Log::shouldReceive()`) é o padrão correto no Laravel 11/12 para assertar chamadas de log sem interromper o fluxo — `Log::spy()` + `Log::assertWarning()` ou `assertLogged()`.
+- `nome_membro` não é injetado pelo middleware atual (só `email_membro`) — o controller usa `$request->get('nome_membro', $email_membro)` como fallback seguro.
+
 ## Plano 1 – Setup Monorepo + Infraestrutura Laravel (concluído em 2026-05-13)
 
 ### O que foi feito

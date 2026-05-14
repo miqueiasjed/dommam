@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminRoteiroController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Download\DownloadController;
 use App\Http\Controllers\Webhook\WebhookController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,7 +17,7 @@ Route::prefix('auth')->group(function () {
 
 // Rotas protegidas — membros com assinatura ativa
 Route::middleware('auth.membro')->group(function () {
-    // Planos futuros adicionarão rotas aqui
+    Route::get('roteiros/{slug}/download', [DownloadController::class, 'baixar']);
 });
 
 // Webhook Lastlink (rota pública — HMAC valida autenticidade)
