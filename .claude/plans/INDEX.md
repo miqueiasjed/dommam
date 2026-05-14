@@ -1,6 +1,6 @@
 # INDEX – Planos do Projeto Danuzio History Backstage
 
-> Última atualização: 2026-05-13 (Plano 8 concluído)
+> Última atualização: 2026-05-13 (Plano 9 concluído)
 
 ## Legenda
 - ✅ Concluído
@@ -20,7 +20,7 @@
 | 6 | Frontend: Design System e Estrutura Base | ✅ | 1 | ~6 | frontend-design-system |
 | 7 | Frontend: Biblioteca de Roteiros (Grid Netflix) | ✅ | 3, 6 | 7 | frontend-design-system |
 | 8 | Frontend: Autenticação + Página de Roteiro | ✅ | 2, 5, 6, 7 | 7 | frontend-design-system |
-| 9 | Frontend: Painel Administrativo | ⏳ | 3, 6 | ~8 | frontend-design-system |
+| 9 | Frontend: Painel Administrativo | ✅ | 3, 6 | ~8 | frontend-design-system |
 | 10 | Polimento, Onboarding E-mails e Lançamento | ⏳ | 1–9 | ~8 | laravel-arquitetura, frontend-design-system, frontend-testing |
 
 ## Ordem de execução recomendada

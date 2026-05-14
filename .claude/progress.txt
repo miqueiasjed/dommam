@@ -1,5 +1,29 @@
 # Log de Aprendizados por Plano
 
+## Plano 9 – Frontend: Painel Administrativo (concluído em 2026-05-13)
+
+### O que foi feito
+- `AdminAuthContext.jsx` + `useAdminAuth.js`: contexto de autenticação admin completamente separado do `AuthContext` de membros — verifica sessão via `GET /api/admin/me`, expõe `loginAdmin()` e `logoutAdmin()`
+- `AdminProtectedRoute.jsx`: redireciona para `/admin/login` se não autenticado (diferente do `ProtectedRoute` que redireciona para `/login`)
+- `AdminLoginPage.jsx`: formulário email+senha, POST `/api/admin/login`, redireciona para `/admin/2fa` em sucesso
+- `AdminTotpPage.jsx`: input de 6 dígitos com sanitização automática de não-numéricos, botão desabilitado até completar 6 dígitos, chama `loginAdmin()` após validação
+- `AdminLayout.jsx`: sidebar com `NavLink` (destaque ativo amber), drawer mobile com overlay e hamburger, `<Outlet />` para rotas filhas — usa `min-h-screen overflow-auto` no container para contornar `overflow: hidden` do body global
+- `AdminRoteirosPage.jsx` + `useAdminRoteiros.js`: tabela com tabs de filtro (todos/publicado/agendado/rascunho), ações editar/despublicar/deletar com confirmação, colunas de data ocultas em mobile
+- `RoteiroFormPage.jsx` + `UploadField.jsx`: formulário 2 colunas (desktop) / 1 coluna (mobile), auto-slug do título, auto-`available_at` = `published_at - 1h`, tags com Enter/vírgula, upload separado de capa e PDF
+- `AdminAssinantesPage.jsx` + `useAdminAssinantes.js`: tabela somente leitura com filtros, link externo Lastlink, nota de aviso no rodapé
+- `AdminAuditLogPage.jsx`: lista de cards (não tabela) com filtros por tipo e data, badges coloridos por tipo de ação
+- `App.jsx` atualizado: `AdminAuthProvider` envolve tudo, rotas admin aninhadas com `AdminLayout` como pai via `Outlet`, `/admin` redireciona para `/admin/roteiros`
+- `index.css` atualizado: tokens `.admin-bg`, `.admin-surface`, `.admin-surface-2`
+- Build: 1828 módulos, 0 erros, 0 warnings
+
+### Aprendizados e observações
+- O body global tem `overflow: hidden` para o portal de membros (evita scroll indesejado no layout de galeria). O painel admin precisa de scroll — solução: `min-h-screen overflow-auto` no container do AdminLayout, sem alterar o body.
+- Autenticação admin e de membros devem ser contextos React completamente separados — compartilhar contexto criaria risco de um admin não-assinante acessar o portal de membros com `isAuthenticated = true`.
+- `NavLink` do React Router aceita função como `className` com arg `{ isActive }` — mais elegante que usar `useLocation` + comparação manual.
+- Input TOTP: usar `.replace(/\D/g, '').slice(0, 6)` no `onChange` garante só dígitos sem bloquear a digitação — mais UX-friendly que `pattern` HTML nativo.
+- `UploadField` com `URL.createObjectURL(arquivo)` gera preview local sem upload — o upload só acontece após salvar o roteiro (2 requisições separadas).
+- Identidade visual do admin baseada no projeto geopolitica: `#050606` background, `#0d0d0f` surface, accent amber-500, font-mono uppercase tracking-widest nos nav items — difere intencionalmente do portal de membros (zinc/amber diferentes).
+
 ## Plano 8 – Frontend: Autenticação + Página Individual de Roteiro (concluído em 2026-05-13)
 
 ### O que foi feito

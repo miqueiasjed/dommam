@@ -27,4 +27,9 @@
   .border-default { border-color: rgba(39, 39, 42, 0.8); } /* zinc-800/80 */
   .scrollbar-hide::-webkit-scrollbar { display: none; }
   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Admin panel */
+  .admin-bg { background-color: #050606; }
+  .admin-surface { background-color: #0d0d0f; }
+  .admin-surface-2 { background-color: #111214; }
 }
