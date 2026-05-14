@@ -1,5 +1,26 @@
 # Log de Aprendizados por Plano
 
+## Plano 8 – Frontend: Autenticação + Página Individual de Roteiro (concluído em 2026-05-13)
+
+### O que foi feito
+- `useRoteiro.js`: hook com fetch autenticado por slug, estados `roteiro/carregando/erro`, tratamento diferenciado para 404 (`erro = 'not_found'`), flag `cancelado` para cleanup de efeito ao desmontar
+- `LoginPage.jsx`: fluxo completo idle→loading→sucesso→erro com formulário, spinner no botão, card de confirmação com `CheckCircle`, banner de erro em `bg-red-900/20`
+- `MagicLinkCallbackPage.jsx`: leitura de token via `useSearchParams`, verificação na API, `login()` no AuthContext, redirect para `/boas-vindas` (primeiro acesso) ou `/biblioteca` com `replace: true`
+- `WelcomeTourPage.jsx`: tour de 3 slides com ícones lucide, dots de navegação amber/zinc-700, flag `danuzio_tour_concluido` no localStorage, redirect imediato no mount se flag presente
+- Rota `/boas-vindas` adicionada em `App.jsx` sem ProtectedRoute
+- `RoteiroHero.jsx`: hero 400px com img `object-cover`, gradiente `from-[#030406]`, badges de temas amber, data formatada com `Intl.DateTimeFormat('pt-BR')`, link Instagram condicional
+- `RoteiroNav.jsx`: navegação prev/next com `<Link>`, `ArrowLeft`/`ArrowRight`, renderiza `<div />` quando null
+- `DownloadButton.jsx`: fetch com `responseType: 'blob'`, `URL.createObjectURL` + click + `revokeObjectURL`, estados baixando/erro, usa componente `Button`
+- `RoteiroPage.jsx`: 4 estados (skeleton, 404, erro genérico, sucesso) com RoteiroHero, DownloadButton, sinopse em parágrafos e RoteiroNav
+
+### Aprendizados e observações
+- O ícone `Instagram` não existe no pacote `lucide-react` instalado no projeto — usar `ExternalLink` como substituto para links do Instagram.
+- `useSearchParams` do react-router-dom é o padrão correto para ler query params em React (não `window.location.search`).
+- Flag de cleanup em `useRoteiro` com `let cancelado = false` dentro do `useEffect` evita setState em componente desmontado — padrão melhor que AbortController para casos simples.
+- `responseType: 'blob'` no axios é necessário para download de arquivo — sem isso, a resposta binária é corrompida em UTF-8.
+- `WelcomeTourPage` não precisa de ProtectedRoute pois o redirect do callback já garante autenticação — simplifica o `App.jsx`.
+- Skeleton do hero usando `animate-pulse` sem usar img evita flash de imagem quebrada no carregamento.
+
 ## Plano 7 – Frontend: Biblioteca de Roteiros / Grid Netflix (concluído em 2026-05-13)
 
 ### O que foi feito

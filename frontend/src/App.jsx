@@ -6,6 +6,7 @@ import MagicLinkCallbackPage from './pages/MagicLinkCallbackPage';
 import BibliotecaPage from './pages/BibliotecaPage';
 import RoteiroPage from './pages/RoteiroPage';
 import AdminPage from './pages/admin/AdminPage';
+import WelcomeTourPage from './pages/WelcomeTourPage';
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/auth/verificar" element={<MagicLinkCallbackPage />} />
+        <Route path="/boas-vindas" element={<WelcomeTourPage />} />
         <Route
           path="/biblioteca"
           element={
