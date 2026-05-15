@@ -2,6 +2,12 @@
 frontend/node_modules/
 frontend/dist/
 
+# React build output em backend/public (gerado no deploy)
+backend/public/index.html
+backend/public/assets/
+backend/public/favicon.svg
+backend/public/icons.svg
+
 # Backend
 backend/.env
 backend/vendor/
@@ -15,3 +21,4 @@ dist/
 node_modules/
 .DS_Store
 *.local
+.vite/
