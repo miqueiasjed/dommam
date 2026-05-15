@@ -26,6 +26,12 @@ class AuthController extends BaseApiController
         );
     }
 
+    // GET /api/auth/me
+    public function me(\Illuminate\Http\Request $request): JsonResponse
+    {
+        return $this->success(dados: ['email' => $request->email_membro]);
+    }
+
     // GET /api/auth/verificar?token=xxx
     public function verificar(VerificarTokenRequest $request): JsonResponse
     {

@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { Shield } from 'lucide-react';
 import apiClient from '../../utils/apiClient';
 import Spinner from '../../components/ui/Spinner';
+import { useAdminAuth } from '../../hooks/useAdminAuth';
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
+  const { loginAdmin } = useAdminAuth();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [carregando, setCarregando] = useState(false);
@@ -16,8 +18,13 @@ export default function AdminLoginPage() {
     setErro('');
     setCarregando(true);
     try {
-      await apiClient.post('/api/admin/login', { email, senha });
-      navigate('/admin/2fa');
+      const { data } = await apiClient.post('/api/admin/login', { email, senha });
+      if (data.dados?.requer_2fa) {
+        navigate('/admin/2fa', { state: { pending_token: data.dados.pending_token } });
+      } else {
+        loginAdmin(data.dados?.email ?? email);
+        navigate('/admin/roteiros', { replace: true });
+      }
     } catch (err) {
       const mensagem = err.response?.data?.message || 'Credenciais inválidas. Tente novamente.';
       setErro(mensagem);

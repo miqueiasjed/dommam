@@ -1,10 +1,13 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Admin\AdminAssinanteController;
+use App\Http\Controllers\Admin\AdminAuditLogController;
 use App\Http\Controllers\Admin\AdminRoteiroController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Download\DownloadController;
+use App\Http\Controllers\Roteiro\RoteiroController;
 use App\Http\Controllers\Webhook\WebhookController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +20,9 @@ Route::prefix('auth')->group(function () {
 
 // Rotas protegidas — membros com assinatura ativa
 Route::middleware('auth.membro')->group(function () {
+    Route::get('auth/me', [AuthController::class, 'me']);
+    Route::get('roteiros', [RoteiroController::class, 'index']);
+    Route::get('roteiros/{slug}', [RoteiroController::class, 'show']);
     Route::get('roteiros/{slug}/download', [DownloadController::class, 'baixar']);
 });
 
@@ -30,7 +36,11 @@ Route::prefix('admin')->group(function () {
 
     // Rotas protegidas — admin autenticado
     Route::middleware('auth.admin')->group(function () {
+        Route::get('me', [AdminAuthController::class, 'me']);
         Route::post('logout', [AdminAuthController::class, 'logout']);
+
+        Route::get('assinantes', [AdminAssinanteController::class, 'index']);
+        Route::get('audit-log', [AdminAuditLogController::class, 'index']);
 
         Route::prefix('roteiros')->group(function () {
             Route::get('/', [AdminRoteiroController::class, 'index']);

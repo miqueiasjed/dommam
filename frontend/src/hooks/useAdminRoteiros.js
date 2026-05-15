@@ -13,7 +13,7 @@ export function useAdminRoteiros() {
     try {
       const params = filtroStatus !== 'todos' ? `?status=${filtroStatus}` : '';
       const { data } = await apiClient.get(`/api/admin/roteiros${params}`);
-      setRoteiros(data.data ?? data);
+      setRoteiros(data.dados?.data ?? data.dados ?? []);
     } catch (e) {
       setErro(e.response?.data?.message ?? e.message);
     } finally {

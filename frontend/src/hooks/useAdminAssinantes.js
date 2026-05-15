@@ -16,7 +16,7 @@ export function useAdminAssinantes() {
         if (filtros.status) params.set('status', filtros.status);
         if (filtros.plano) params.set('plano', filtros.plano);
         const { data } = await apiClient.get(`/api/admin/assinantes?${params.toString()}`);
-        setAssinantes(data.data ?? data);
+        setAssinantes(data.dados ?? []);
       } catch (e) {
         setErro(e.response?.data?.message ?? e.message);
       } finally {

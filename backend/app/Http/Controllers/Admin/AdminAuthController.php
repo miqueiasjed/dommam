@@ -84,6 +84,19 @@ class AdminAuthController extends BaseApiController
         }
     }
 
+    // GET /api/admin/me
+    public function me(Request $request): JsonResponse
+    {
+        $admin = $request->adminAutenticado;
+
+        return $this->success(dados: [
+            'id'           => $admin->id,
+            'email'        => $admin->email,
+            'role'         => $admin->role,
+            'ultimo_acesso' => $admin->ultimo_acesso,
+        ]);
+    }
+
     // POST /api/admin/logout
     public function logout(Request $request): JsonResponse
     {

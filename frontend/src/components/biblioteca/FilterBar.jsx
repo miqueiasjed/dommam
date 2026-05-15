@@ -1,10 +1,14 @@
 import { X } from 'lucide-react';
-import Button from '../ui/Button';
+
+const btnBase = 'rounded-md border px-3 py-2 font-mono text-[11px] uppercase tracking-[0.16em] transition-all duration-200';
+const btnAtivo = `${btnBase} border-[#bfff3c]/35 bg-[#bfff3c]/10 text-white shadow-[0_0_16px_rgba(191,255,60,0.08)]`;
+const btnInativo = `${btnBase} border-transparent text-zinc-400 hover:border-white/10 hover:bg-white/[0.04] hover:text-zinc-100`;
+
+const selectClass = 'rounded-md border border-zinc-800 bg-zinc-900/80 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-zinc-400 outline-none transition-colors duration-200 hover:border-zinc-700 hover:text-zinc-200 focus:border-[#bfff3c]/30 cursor-pointer';
 
 export default function FilterBar({ filtros, onFiltrosChange, roteiros }) {
   const meses = [...new Set(roteiros.map(r => r.publicado_em?.slice(0, 7)).filter(Boolean))].sort().reverse();
   const temas = [...new Set(roteiros.flatMap(r => r.tema ? [r.tema] : []))].sort();
-  const tipos = ['Bastidor', 'Evento histórico', 'Personagem'];
 
   const filtroAtivo = filtros.mes || filtros.temas.length > 0 || filtros.tipo;
 
@@ -20,53 +24,62 @@ export default function FilterBar({ filtros, onFiltrosChange, roteiros }) {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      {/* Filtro mês */}
-      <select
-        value={filtros.mes}
-        onChange={e => onFiltrosChange({ ...filtros, mes: e.target.value })}
-        className="rounded-lg border border-zinc-800 bg-surface px-2.5 py-1 text-[11px] text-zinc-300 focus:border-zinc-700 focus:outline-none"
-      >
-        <option value="">Todos os meses</option>
-        {meses.map(m => (
-          <option key={m} value={m}>{m}</option>
-        ))}
-      </select>
-
-      {/* Tags de tema */}
-      {temas.map(tema => (
+    <div className="-mx-4 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0">
+      <div className="flex min-w-max flex-wrap items-center gap-2">
         <button
-          key={tema}
-          onClick={() => toggleTema(tema)}
-          className={`rounded-full px-3 py-0.5 text-[11px] font-medium transition-colors border ${
-            filtros.temas.includes(tema)
-              ? 'bg-amber-600 border-amber-600 text-white'
-              : 'border-zinc-700 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200'
-          }`}
+          type="button"
+          onClick={limpar}
+          className={!filtroAtivo ? btnAtivo : btnInativo}
         >
-          {tema}
+          Todos
         </button>
-      ))}
 
-      {/* Filtro tipo */}
-      <select
-        value={filtros.tipo}
-        onChange={e => onFiltrosChange({ ...filtros, tipo: e.target.value })}
-        className="rounded-lg border border-zinc-800 bg-surface px-2.5 py-1 text-[11px] text-zinc-300 focus:border-zinc-700 focus:outline-none"
-      >
-        <option value="">Todos os tipos</option>
-        {tipos.map(t => (
-          <option key={t} value={t}>{t}</option>
+        {temas.map(tema => (
+          <button
+            key={tema}
+            type="button"
+            onClick={() => toggleTema(tema)}
+            className={filtros.temas.includes(tema) ? btnAtivo : btnInativo}
+          >
+            {tema}
+          </button>
         ))}
-      </select>
 
-      {/* Limpar filtros */}
-      {filtroAtivo && (
-        <Button variante="ghost" tamanho="sm" onClick={limpar}>
-          <X size={12} />
-          Limpar filtros
-        </Button>
-      )}
+        <select
+          value={filtros.tipo}
+          onChange={e => onFiltrosChange({ ...filtros, tipo: e.target.value })}
+          aria-label="Filtrar por tipo"
+          className={selectClass}
+        >
+          <option value="">Tipo</option>
+          <option value="Bastidor">Bastidor</option>
+          <option value="Evento histórico">Evento histórico</option>
+          <option value="Personagem">Personagem</option>
+        </select>
+
+        <select
+          value={filtros.mes}
+          onChange={e => onFiltrosChange({ ...filtros, mes: e.target.value })}
+          aria-label="Filtrar por mês"
+          className={selectClass}
+        >
+          <option value="">Todos os meses</option>
+          {meses.map(m => (
+            <option key={m} value={m}>{m}</option>
+          ))}
+        </select>
+
+        {filtroAtivo && (
+          <button
+            type="button"
+            onClick={limpar}
+            className="flex items-center gap-1.5 rounded-md border border-zinc-700 bg-transparent px-3 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-zinc-400 transition-colors hover:border-zinc-500 hover:text-zinc-200 animate-fade-in"
+          >
+            <X size={11} />
+            Limpar
+          </button>
+        )}
+      </div>
     </div>
   );
 }

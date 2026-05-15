@@ -16,7 +16,7 @@ export function useRoteiro(slug) {
       setErro(null);
       try {
         const res = await apiClient.get(`/api/roteiros/${slug}`);
-        if (!cancelado) setRoteiro(res.data);
+        if (!cancelado) setRoteiro(res.data.dados ?? res.data);
       } catch (e) {
         if (!cancelado) {
           if (e.response?.status === 404) {

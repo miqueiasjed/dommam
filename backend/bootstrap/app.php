@@ -12,6 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->api(append: [
+            \Illuminate\Cookie\Middleware\EncryptCookies::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+        ]);
+
         $middleware->alias([
             'auth.membro' => \App\Http\Middleware\VerificarAssinaturaAtiva::class,
             'auth.admin'  => \App\Http\Middleware\AutenticadoComoAdmin::class,

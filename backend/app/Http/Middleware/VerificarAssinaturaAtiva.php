@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\AdminUser;
 use App\Services\Auth\LastlinkService;
 use App\Services\Auth\SessaoService;
 use Closure;
@@ -17,6 +18,16 @@ class VerificarAssinaturaAtiva
 
     public function handle(Request $request, Closure $next): Response
     {
+        // Admin autenticado pode acessar a área de assinante sem magic link
+        $adminId = session('admin_autenticado');
+        if ($adminId) {
+            $admin = AdminUser::find($adminId);
+            if ($admin && $admin->ativo) {
+                $request->merge(['email_membro' => $admin->email]);
+                return $next($request);
+            }
+        }
+
         $sessao = $this->sessaoService->sessaoAtiva($request);
 
         if (!$sessao) {

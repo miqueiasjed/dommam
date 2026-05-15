@@ -12,7 +12,7 @@ export function AuthProvider({ children }) {
     async function verificarSessao() {
       try {
         const { data } = await apiClient.get('/api/auth/me');
-        setEmail(data.email);
+        setEmail(data.dados?.email);
         setIsAuthenticated(true);
       } catch {
         setIsAuthenticated(false);

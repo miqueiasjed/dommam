@@ -19,13 +19,24 @@ class AdminUserSeeder extends Seeder
             ['email' => 'admin@danuziohistory.com.br'],
             [
                 'nome'        => 'Administrador',
-                'password'    => 'admin123', // cast 'hashed' no model aplica o hash automaticamente
+                'password'    => 'admin123',
                 'role'        => 'admin',
                 'ativo'       => true,
                 'totp_secret' => null,
             ]
         );
 
-        $this->command->info('Admin padrão criado/verificado: admin@danuziohistory.com.br');
+        AdminUser::firstOrCreate(
+            ['email' => 'miqueias@gmail.com'],
+            [
+                'nome'        => 'Miqueias',
+                'password'    => '123456',
+                'role'        => 'admin',
+                'ativo'       => true,
+                'totp_secret' => null,
+            ]
+        );
+
+        $this->command->info('Admins criados/verificados: admin@danuziohistory.com.br, miqueias@gmail.com');
     }
 }

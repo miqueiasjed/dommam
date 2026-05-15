@@ -32,7 +32,7 @@ describe('BibliotecaPage', () => {
 
   it('exibe o campo de busca', () => {
     render(<BibliotecaPage />)
-    expect(screen.getByPlaceholderText('Buscar roteiros...')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Buscar vídeos, temas, tipos...')).toBeInTheDocument()
   })
 
   it('exibe o seletor de ordenação', () => {

@@ -1,35 +1,116 @@
 @import "tailwindcss";
 
+:root {
+  color-scheme: dark;
+  font-family: "Sora", "Inter", system-ui, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  --dh-bg: #050606;
+  --dh-surface: #101111;
+  --dh-surface-2: #171817;
+  --dh-border: rgba(191, 255, 60, 0.13);
+  --dh-accent: #bfff3c;
+  --dh-accent-2: #d7ff69;
+  color: #f7f7f2;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: #050606;
+  overflow: hidden;
+}
+
+#root {
+  width: 100%;
+  height: 100vh;
+}
+
 @layer base {
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button, input, textarea, select {
+    font: inherit;
+  }
+}
+
+::selection {
+  background: rgba(191, 255, 60, 0.28);
+  color: #ffffff;
+}
+
+/* Keyframes */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
-    box-sizing: border-box;
-  }
-
-  body {
-    overflow: hidden;
-    background-color: #030406;
-    color: rgb(212 212 216); /* zinc-300 */
-    font-family: system-ui, -apple-system, sans-serif;
-  }
-
-  #root {
-    width: 100%;
-    height: 100vh;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
 @layer utilities {
-  .bg-surface { background-color: #080a0e; }
-  .bg-surface-elevated { background-color: #0d1017; }
-  .bg-page { background-color: #030406; }
-  .text-muted { color: rgb(161 161 170); } /* zinc-400 */
-  .text-subtle { color: rgb(113 113 122); } /* zinc-500 */
-  .border-default { border-color: rgba(39, 39, 42, 0.8); } /* zinc-800/80 */
+  /* Cores */
+  .bg-page           { background-color: #050606; }
+  .bg-surface        { background-color: #101111; }
+  .bg-surface-elevated { background-color: #111113; }
+  .text-muted        { color: rgb(161 161 170); }
+  .text-subtle       { color: rgb(113 113 122); }
+  .border-default    { border-color: rgba(191, 255, 60, 0.13); }
+
+  /* Scrollbar */
   .scrollbar-hide::-webkit-scrollbar { display: none; }
   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
+  /* Animations */
+  .animate-fade-in       { animation: fade-in 0.4s ease-out both; }
+  .animate-slide-up      { animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .animate-slide-in-right { animation: slide-in-right 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .animate-slide-in-left  { animation: slide-in-left 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .animate-scale-in      { animation: scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .animate-shimmer {
+    background: linear-gradient(90deg, #101111 0%, #1a2020 50%, #101111 100%);
+    background-size: 1200px 100%;
+    animation: shimmer 1.8s ease-in-out infinite;
+  }
+
   /* Admin panel */
-  .admin-bg { background-color: #050606; }
-  .admin-surface { background-color: #0d0d0f; }
+  .admin-bg        { background-color: #050606; }
+  .admin-surface   { background-color: #0d0d0f; }
   .admin-surface-2 { background-color: #111214; }
 }

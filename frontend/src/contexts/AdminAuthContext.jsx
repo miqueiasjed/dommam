@@ -12,7 +12,7 @@ export function AdminAuthProvider({ children }) {
     async function verificarSessaoAdmin() {
       try {
         const { data } = await apiClient.get('/api/admin/me');
-        setAdminEmail(data.email);
+        setAdminEmail(data.dados?.email);
         setIsAdminAuthenticated(true);
       } catch {
         setIsAdminAuthenticated(false);

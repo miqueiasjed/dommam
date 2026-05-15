@@ -69,6 +69,45 @@ class LastlinkService
         }
     }
 
+    public function listarAssinantes(array $filtros = []): array
+    {
+        try {
+            $query = array_filter([
+                'status' => $filtros['status'] ?? null,
+                'plan'   => $filtros['plano'] ?? null,
+            ]);
+
+            $response = Http::withToken($this->apiKey)
+                ->timeout(10)
+                ->get("{$this->baseUrl}/subscribers", $query);
+
+            if ($response->successful()) {
+                $corpo = $response->json();
+                $registros = $corpo['data'] ?? $corpo['subscribers'] ?? $corpo ?? [];
+
+                return array_map(fn ($item) => [
+                    'id'          => $item['id'] ?? null,
+                    'email'       => $item['email'] ?? '',
+                    'plano'       => $item['plan'] ?? $item['plano'] ?? '',
+                    'status'      => $item['status'] ?? '',
+                    'criado_em'   => $item['created_at'] ?? $item['criado_em'] ?? null,
+                    'lastlink_url' => $item['url'] ?? $item['lastlink_url'] ?? null,
+                ], is_array($registros) ? $registros : []);
+            }
+
+            Log::warning('Lastlink: falha ao listar assinantes', [
+                'status_http' => $response->status(),
+                'body'        => $response->body(),
+            ]);
+
+            return [];
+        } catch (\Exception $e) {
+            Log::error('Lastlink: exceção ao listar assinantes', ['erro' => $e->getMessage()]);
+
+            return [];
+        }
+    }
+
     public function invalidarCache(string $email): void
     {
         $chave = 'lastlink:assinatura:' . md5(strtolower($email));

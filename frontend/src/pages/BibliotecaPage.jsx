@@ -20,19 +20,42 @@ export default function BibliotecaPage() {
 
   return (
     <AppShell>
-      <div className="flex flex-col h-full">
-        {/* Barra de controles sticky */}
-        <div className="sticky top-0 z-10 bg-page border-b border-zinc-800/80 px-6 py-3 space-y-2">
-          <div className="flex items-center gap-3 flex-wrap">
-            <SearchBar busca={busca} onBuscaChange={setBusca} />
-            <SortSelector ordenacao={ordenacao} onOrdenacaoChange={setOrdenacao} />
-          </div>
-          <FilterBar filtros={filtros} onFiltrosChange={setFiltros} roteiros={roteiros} />
-        </div>
+      <div className="flex min-h-full flex-col px-4 py-6 sm:px-6 lg:px-8 animate-fade-in">
+        <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col">
 
-        {/* Grid de roteiros */}
-        <div className="flex-1 overflow-auto px-6 py-6">
-          <RoteiroGrid roteiros={roteiros} carregando={carregando} erro={erro} />
+          {/* Cabeçalho */}
+          <div className="mb-6 animate-slide-up" style={{ animationDelay: '40ms' }}>
+            <p className="font-mono text-[10px] uppercase tracking-[0.30em] text-[#bfff3c]/70">
+              Biblioteca
+            </p>
+            <h1 className="mt-1 text-[22px] font-black leading-tight text-white">
+              Explorar roteiros
+            </h1>
+            <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.14em] text-zinc-500">
+              {carregando ? 'Carregando...' : `${roteiros.length} roteiros encontrados`}
+            </p>
+          </div>
+
+          {/* Barra de busca + ordenação */}
+          <div
+            className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center animate-slide-up"
+            style={{ animationDelay: '90ms' }}
+          >
+            <SearchBar busca={busca} onBuscaChange={setBusca} />
+            <div className="shrink-0">
+              <SortSelector ordenacao={ordenacao} onOrdenacaoChange={setOrdenacao} />
+            </div>
+          </div>
+
+          {/* Filtros */}
+          <div className="mb-6 animate-slide-up" style={{ animationDelay: '140ms' }}>
+            <FilterBar filtros={filtros} onFiltrosChange={setFiltros} roteiros={roteiros} />
+          </div>
+
+          {/* Grid */}
+          <div className="flex-1">
+            <RoteiroGrid roteiros={roteiros} carregando={carregando} erro={erro} />
+          </div>
         </div>
       </div>
     </AppShell>

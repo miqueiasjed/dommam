@@ -12,31 +12,44 @@ export default function AppShell({ children }) {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-page">
-      <header className="flex h-14 items-center justify-between border-b border-zinc-800/80 bg-surface px-6">
-        <div className="flex items-center gap-2.5">
-          <BookOpen size={20} className="text-amber-500" />
-          <span className="text-[14px] font-semibold text-white">Danuzio History</span>
-          <span className="rounded-full bg-amber-900/40 px-2 py-0.5 text-[9px] font-medium uppercase tracking-wider text-amber-400">
-            Backstage
-          </span>
+    <div className="flex h-screen flex-col bg-[#050606]">
+      {/* Fundo global: gradiente radial + grid — igual ao geopolitica */}
+      <div className="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_0%,rgba(191,255,60,0.10),transparent_28%),radial-gradient(circle_at_96%_34%,rgba(255,91,32,0.09),transparent_24%),linear-gradient(180deg,rgba(7,10,8,0.6),rgba(5,6,6,1))]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.022)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.022)_1px,transparent_1px)] bg-[size:24px_24px]" />
+      </div>
+
+      {/* Header */}
+      <header className="relative z-10 flex h-14 shrink-0 items-center justify-between border-b border-[rgba(191,255,60,0.10)] bg-[#070808]/95 px-6 backdrop-blur-xl">
+        <div className="flex items-center gap-3">
+          <BookOpen size={18} className="text-[#bfff3c]" />
+          <div>
+            <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-[#bfff3c]/70">
+              backstage exclusivo
+            </p>
+            <p className="text-[13px] font-black leading-none text-white">
+              Danuzio History
+            </p>
+          </div>
         </div>
 
         {email && (
           <div className="flex items-center gap-3">
-            <span className="text-[11px] text-zinc-500">{email}</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-500">
+              {email}
+            </span>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] text-zinc-400 transition-colors hover:bg-zinc-800/50 hover:text-zinc-200"
+              className="flex items-center gap-1.5 rounded-md border border-white/8 bg-white/[0.03] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-400 transition-colors hover:border-[#bfff3c]/30 hover:text-[#d7ff69]"
             >
-              <LogOut size={13} />
+              <LogOut size={12} />
               Sair
             </button>
           </div>
         )}
       </header>
 
-      <main className="flex-1 overflow-auto">
+      <main className="relative z-10 flex-1 overflow-auto">
         {children}
       </main>
     </div>

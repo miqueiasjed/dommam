@@ -3,7 +3,7 @@ import { Download, Loader2 } from 'lucide-react';
 import Button from '../ui/Button';
 import apiClient from '../../utils/apiClient';
 
-export default function DownloadButton({ slug, titulo }) {
+export default function DownloadButton({ slug, titulo, className = '' }) {
   const [baixando, setBaixando] = useState(false);
   const [erro, setErro] = useState(null);
 
@@ -20,7 +20,7 @@ export default function DownloadButton({ slug, titulo }) {
       link.download = `${titulo ?? slug}.pdf`;
       link.click();
       URL.revokeObjectURL(url);
-    } catch (e) {
+    } catch {
       setErro('Não foi possível baixar o PDF. Tente novamente.');
     } finally {
       setBaixando(false);
@@ -34,6 +34,7 @@ export default function DownloadButton({ slug, titulo }) {
         tamanho="lg"
         onClick={handleDownload}
         disabled={baixando}
+        className={className}
       >
         {baixando ? (
           <Loader2 size={15} className="animate-spin" />

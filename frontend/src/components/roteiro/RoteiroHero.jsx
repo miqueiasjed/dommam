@@ -1,4 +1,4 @@
-import { ExternalLink } from 'lucide-react';
+import { Calendar, ExternalLink, FileText } from 'lucide-react';
 
 export default function RoteiroHero({ capa_url, titulo, data_publicacao, temas, instagram_url }) {
   const dataFormatada = data_publicacao
@@ -6,30 +6,36 @@ export default function RoteiroHero({ capa_url, titulo, data_publicacao, temas, 
     : '';
 
   return (
-    <div className="relative w-full h-[400px] md:h-[45vh] md:min-h-[300px]">
-      {/* Imagem de capa ou fallback */}
+    <div
+      className="relative overflow-hidden rounded-2xl border border-[#1e2020] animate-scale-in"
+      style={{ minHeight: '380px' }}
+    >
+      {/* Imagem de fundo */}
       {capa_url ? (
         <img
           src={capa_url}
           alt=""
-          className="object-cover w-full h-full"
+          className="absolute inset-0 h-full w-full object-cover"
         />
       ) : (
-        <div className="w-full h-full bg-zinc-900" />
+        <div className="absolute inset-0 flex items-center justify-center bg-[#111113] text-zinc-800">
+          <FileText size={56} />
+        </div>
       )}
 
-      {/* Gradiente inferior */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#030406] via-[#030406]/60 to-transparent" />
+      {/* Gradiente cinematográfico — começa transparente no topo, escurece pesado embaixo */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#050606] via-[#050606]/60 to-[#050606]/10" />
+      {/* Gradiente lateral esquerdo sutil para legibilidade do texto */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#050606]/40 to-transparent" />
 
-      {/* Conteúdo no rodapé do hero */}
-      <div className="absolute bottom-0 left-0 right-0 p-8">
-        {/* Temas */}
+      {/* Conteúdo sobreposto */}
+      <div className="relative flex h-full min-h-[380px] flex-col justify-end p-6 sm:p-8 lg:p-10">
         {temas && temas.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mb-3">
+          <div className="mb-4 flex flex-wrap gap-2 animate-slide-up" style={{ animationDelay: '80ms' }}>
             {temas.map((tema) => (
               <span
                 key={tema}
-                className="rounded-full bg-amber-900/30 px-2.5 py-0.5 text-[10px] font-medium text-amber-400"
+                className="rounded-full border border-[#bfff3c]/30 bg-[#bfff3c]/15 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.20em] text-[#bfff3c] backdrop-blur-sm"
               >
                 {tema}
               </span>
@@ -37,28 +43,36 @@ export default function RoteiroHero({ capa_url, titulo, data_publicacao, temas, 
           </div>
         )}
 
-        {/* Título */}
-        <h1 className="text-white font-bold text-[28px] md:text-[36px] leading-tight">
+        <h1
+          className="max-w-3xl text-[28px] font-black leading-[1.08] tracking-tight text-white sm:text-[36px] lg:text-[42px] animate-slide-up"
+          style={{ animationDelay: '140ms' }}
+        >
           {titulo}
         </h1>
 
-        {/* Data */}
-        {dataFormatada && (
-          <p className="text-muted text-[13px] mt-1">{dataFormatada}</p>
-        )}
+        <div
+          className="mt-4 flex flex-wrap items-center gap-3 animate-slide-up"
+          style={{ animationDelay: '200ms' }}
+        >
+          {dataFormatada && (
+            <span className="inline-flex items-center gap-2 rounded-md border border-white/10 bg-black/40 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-zinc-300 backdrop-blur-sm">
+              <Calendar size={12} className="text-[#bfff3c]" />
+              {dataFormatada}
+            </span>
+          )}
 
-        {/* Link Instagram */}
-        {instagram_url && (
-          <a
-            href={instagram_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-[12px] text-zinc-400 hover:text-white transition-colors mt-3"
-          >
-            <ExternalLink size={13} />
-            Ver no Instagram
-          </a>
-        )}
+          {instagram_url && (
+            <a
+              href={instagram_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-md border border-white/10 bg-black/40 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-zinc-300 backdrop-blur-sm transition-colors hover:border-[#bfff3c]/25 hover:text-white"
+            >
+              <ExternalLink size={12} className="text-[#bfff3c]" />
+              Instagram
+            </a>
+          )}
+        </div>
       </div>
     </div>
   );

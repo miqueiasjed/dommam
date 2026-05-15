@@ -43,7 +43,7 @@ export default function AdminAuditLogPage() {
         if (filtros.de) params.set('de', filtros.de);
         if (filtros.ate) params.set('ate', filtros.ate);
         const { data } = await apiClient.get(`/api/admin/audit-log?${params.toString()}`);
-        setItens(data.data ?? data);
+        setItens(data.dados ?? []);
       } catch (e) {
         setErro(e.response?.data?.message ?? e.message);
       } finally {
