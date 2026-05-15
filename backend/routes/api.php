@@ -5,22 +5,22 @@ use App\Http\Controllers\Admin\AdminAssinanteController;
 use App\Http\Controllers\Admin\AdminAuditLogController;
 use App\Http\Controllers\Admin\AdminRoteiroController;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Download\DownloadController;
 use App\Http\Controllers\Roteiro\RoteiroController;
 use App\Http\Controllers\Webhook\WebhookController;
 use Illuminate\Support\Facades\Route;
 
-// Rotas públicas de autenticação de membros
+// Autenticação de membros
 Route::prefix('auth')->group(function () {
-    Route::post('solicitar-link', [AuthController::class, 'solicitarLink']);
-    Route::get('verificar', [AuthController::class, 'verificar']);
-    Route::post('logout', [LogoutController::class, 'logout'])->middleware('auth.membro');
+    Route::post('login', [AuthController::class, 'login']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('logout', [AuthController::class, 'logout']);
+        Route::get('me', [AuthController::class, 'me']);
+    });
 });
 
 // Rotas protegidas — membros com assinatura ativa
 Route::middleware('auth.membro')->group(function () {
-    Route::get('auth/me', [AuthController::class, 'me']);
     Route::get('roteiros', [RoteiroController::class, 'index']);
     Route::get('roteiros/{slug}', [RoteiroController::class, 'show']);
     Route::get('roteiros/{slug}/download', [DownloadController::class, 'baixar']);

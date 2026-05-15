@@ -5,7 +5,6 @@ import AdminProtectedRoute from './components/admin/AdminProtectedRoute';
 import AdminLayout from './components/admin/AdminLayout';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
-import MagicLinkCallbackPage from './pages/MagicLinkCallbackPage';
 import BibliotecaPage from './pages/BibliotecaPage';
 import RoteiroPage from './pages/RoteiroPage';
 import WelcomeTourPage from './pages/WelcomeTourPage';
@@ -24,7 +23,6 @@ export default function App() {
           {/* Portal de membros */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/auth/verificar" element={<MagicLinkCallbackPage />} />
           <Route path="/boas-vindas" element={<WelcomeTourPage />} />
           <Route
             path="/biblioteca"

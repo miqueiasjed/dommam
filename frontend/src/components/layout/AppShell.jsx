@@ -3,7 +3,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
 export default function AppShell({ children }) {
-  const { email, logout } = useAuth();
+  const { usuario, logout } = useAuth();
   const navigate = useNavigate();
 
   async function handleLogout() {
@@ -33,10 +33,10 @@ export default function AppShell({ children }) {
           </div>
         </div>
 
-        {email && (
+        {usuario && (
           <div className="flex items-center gap-3">
             <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-500">
-              {email}
+              {usuario.email}
             </span>
             <button
               onClick={handleLogout}

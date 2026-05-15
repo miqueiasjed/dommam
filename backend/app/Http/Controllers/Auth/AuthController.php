@@ -3,49 +3,43 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\BaseApiController;
-use App\Http\Requests\Auth\SolicitarMagicLinkRequest;
-use App\Http\Requests\Auth\VerificarTokenRequest;
-use App\Services\Auth\MagicLinkService;
-use App\Services\Auth\SessaoService;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Services\Auth\AutenticacaoService;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class AuthController extends BaseApiController
 {
     public function __construct(
-        private readonly MagicLinkService $magicLinkService,
-        private readonly SessaoService $sessaoService,
+        private readonly AutenticacaoService $autenticacaoService,
     ) {}
 
-    // POST /api/auth/solicitar-link
-    public function solicitarLink(SolicitarMagicLinkRequest $request): JsonResponse
+    // POST /api/auth/login
+    public function login(LoginRequest $request): JsonResponse
     {
-        $this->magicLinkService->gerar($request->validated('email'));
+        try {
+            $resultado = $this->autenticacaoService->fazerLogin($request->validated());
+        } catch (AuthenticationException $e) {
+            return $this->error($e->getMessage(), 401);
+        }
 
-        return $this->success(
-            mensagem: 'Link de acesso enviado para ' . $request->validated('email') . '. Verifique sua caixa de entrada.'
-        );
+        return $this->success(dados: $resultado, mensagem: 'Login realizado com sucesso.');
+    }
+
+    // POST /api/auth/logout
+    public function logout(Request $request): JsonResponse
+    {
+        $this->autenticacaoService->encerrarSessao($request->user());
+
+        return $this->success(mensagem: 'Sessão encerrada com sucesso.');
     }
 
     // GET /api/auth/me
-    public function me(\Illuminate\Http\Request $request): JsonResponse
+    public function me(Request $request): JsonResponse
     {
-        return $this->success(dados: ['email' => $request->email_membro]);
-    }
-
-    // GET /api/auth/verificar?token=xxx
-    public function verificar(VerificarTokenRequest $request): JsonResponse
-    {
-        $sessao = $this->sessaoService->verificar($request->validated('token'));
-
-        if (!$sessao) {
-            return $this->error('Link inválido ou expirado. Solicite um novo link de acesso.', 401);
-        }
-
-        $cookie = $this->sessaoService->criarCookieSessao($sessao->email);
-
         return $this->success(
-            dados: ['email' => $sessao->email],
-            mensagem: 'Acesso autorizado.'
-        )->withCookie($cookie);
+            dados: ['usuario' => $this->autenticacaoService->obterUsuarioAutenticado($request->user())]
+        );
     }
 }
