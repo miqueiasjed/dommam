@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminAssinanteController;
 use App\Http\Controllers\Admin\AdminAuditLogController;
 use App\Http\Controllers\Admin\AdminRoteiroController;
+use App\Http\Controllers\Admin\AdminUsuarioController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Download\DownloadController;
 use App\Http\Controllers\Roteiro\RoteiroController;
@@ -41,6 +42,13 @@ Route::prefix('admin')->group(function () {
 
         Route::get('assinantes', [AdminAssinanteController::class, 'index']);
         Route::get('audit-log', [AdminAuditLogController::class, 'index']);
+
+        Route::prefix('usuarios')->group(function () {
+            Route::get('/', [AdminUsuarioController::class, 'index']);
+            Route::post('/', [AdminUsuarioController::class, 'store']);
+            Route::put('{id}', [AdminUsuarioController::class, 'update']);
+            Route::delete('{id}', [AdminUsuarioController::class, 'destroy']);
+        });
 
         Route::prefix('roteiros')->group(function () {
             Route::get('/', [AdminRoteiroController::class, 'index']);

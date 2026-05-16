@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { FileText, Users, Activity, LogOut, ArrowLeft, Menu, X } from 'lucide-react';
+import { FileText, Users, Activity, LogOut, ArrowLeft, Menu, X, ShieldUser } from 'lucide-react';
 import { useAdminAuth } from '../../hooks/useAdminAuth';
 
 const itens = [
   { label: 'Roteiros', rota: '/admin/roteiros', icone: FileText },
   { label: 'Assinantes', rota: '/admin/assinantes', icone: Users },
+  { label: 'Usuários', rota: '/admin/usuarios', icone: ShieldUser },
   { label: 'Audit Log', rota: '/admin/audit-log', icone: Activity },
 ];
 

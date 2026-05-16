@@ -14,6 +14,7 @@ import AdminRoteirosPage from './pages/admin/AdminRoteirosPage';
 import RoteiroFormPage from './pages/admin/RoteiroFormPage';
 import AdminAssinantesPage from './pages/admin/AdminAssinantesPage';
 import AdminAuditLogPage from './pages/admin/AdminAuditLogPage';
+import AdminUsuariosPage from './pages/admin/AdminUsuariosPage';
 
 export default function App() {
   return (
@@ -59,6 +60,7 @@ export default function App() {
             <Route path="roteiros/novo" element={<RoteiroFormPage />} />
             <Route path="roteiros/:id/editar" element={<RoteiroFormPage />} />
             <Route path="assinantes" element={<AdminAssinantesPage />} />
+            <Route path="usuarios" element={<AdminUsuariosPage />} />
             <Route path="audit-log" element={<AdminAuditLogPage />} />
           </Route>
         </Routes>
